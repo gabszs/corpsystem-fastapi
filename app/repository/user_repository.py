@@ -22,9 +22,11 @@ class UserRepository(BaseRepository):
                 await session.commit()
                 await session.refresh(model)
             except IntegrityError as e:
-                if "Key (email)" in str(e.orig):
+                if "email" in str(e.orig):
                     raise DuplicatedError(detail="Email already registered")
-                if "Key (username)" in str(e.orig):
+                if "username" in str(e.orig):
                     raise DuplicatedError(detail="Username already registered")
+                print(e.orig)
+                print("caindo no ultimo try")
                 raise DuplicatedError(detail=f"{self.model.__tablename__.capitalize()[:-1]} already registered")
             return model
