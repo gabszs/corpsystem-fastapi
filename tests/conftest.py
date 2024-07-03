@@ -25,12 +25,15 @@ from app.main import app
 from app.models import Base
 from app.models import User
 from app.models.models_enums import UserRoles
+from app.schemas.product_schema import PublicProduct
+from tests.factories import ProductFactory
 from tests.factories import UserFactory
 from tests.helpers import add_users_models
+from tests.helpers import setup_inventory_data
+from tests.helpers import setup_product_data
 from tests.helpers import token
 from tests.schemas import UserModelSetup
 from tests.schemas import UserSchemaWithHashedPassword
-
 
 sync_db_url = settings.TEST_DATABASE_URL.replace("asyncmy", "pymysql")
 
@@ -67,6 +70,11 @@ def default_username_search_options() -> Dict[str, Union[str, int]]:
 @pytest.fixture
 def factory_user() -> UserFactory:
     return UserFactory()
+
+
+@pytest.fixture
+def factory_product() -> ProductFactory:
+    return ProductFactory()
 
 
 @pytest.fixture
@@ -200,3 +208,13 @@ async def admin_user(session: AsyncSession) -> List[Union[UserSchemaWithHashedPa
 @pytest.fixture()
 async def disable_normal_user(session: AsyncSession) -> List[Union[UserSchemaWithHashedPassword, User]]:
     return await add_users_models(session, index=0, user_role=UserRoles.BASE_USER, is_active=False)
+
+
+@pytest.fixture()
+async def product(session: AsyncSession) -> PublicProduct:
+    return await setup_product_data(session, index=0)  # type: ignore
+
+
+@pytest.fixture()
+async def inventory(session: AsyncSession) -> PublicProduct:
+    return await setup_inventory_data(session, index=0)  # type: ignore

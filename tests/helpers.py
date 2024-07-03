@@ -11,7 +11,11 @@ from app.core.security import get_password_hash
 from app.core.settings import settings
 from app.models import User
 from app.models.models_enums import UserRoles
+from app.schemas.inventory_schema import PublicInventory
+from app.schemas.product_schema import PublicProduct
 from tests.factories import create_factory_users
+from tests.factories import InventoryFactory
+from tests.factories import ProductFactory
 from tests.schemas import UserModelSetup
 from tests.schemas import UserSchemaWithHashedPassword
 
@@ -77,6 +81,59 @@ async def setup_users_data(
         )
         return_list.append(*user_list)
     return return_list
+
+
+async def setup_product_data(
+    session: AsyncSession, product_qty: int = 1, index: Optional[int] = None
+) -> List[PublicProduct]:
+    product_list: List[PublicProduct] = []
+    products = ProductFactory.create_batch(product_qty)
+    session.add_all(products)
+    await session.commit()
+    for product in products:
+        await session.refresh(product)
+        product_list.append(
+            PublicProduct(
+                name=product.name,
+                description=product.description,
+                id=product.id,
+                created_at=product.created_at,
+                updated_at=product.updated_at,
+            )
+        )
+
+    if index is not None:
+        return product_list[index]
+    return product_list
+
+
+async def setup_inventory_data(
+    session: AsyncSession, inventory_qty: int = 1, index: Optional[int] = None
+) -> List[PublicInventory]:
+    inventory_list: List[PublicInventory] = []
+    products = await setup_product_data(session, inventory_qty)
+    inventory = []
+    for product in products:
+        inventory.append(InventoryFactory(product_id=product.id))
+
+    session.add_all(inventory)
+    await session.commit()
+    for product in inventory:
+        await session.refresh(product)
+        inventory_list.append(
+            PublicInventory(
+                quantity=product.quantity,
+                unit_price=product.unit_price,
+                product_id=product.product_id,
+                id=product.id,
+                created_at=product.created_at,
+                updated_at=product.updated_at,
+            )
+        )
+
+    if index is not None:
+        return inventory_list[index]
+    return inventory_list
 
 
 async def token(client, session: AsyncSession, base_auth_route: str = "/v1/auth", **kwargs):
