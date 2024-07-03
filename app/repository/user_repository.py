@@ -2,7 +2,7 @@ from contextlib import AbstractAsyncContextManager
 from typing import Callable
 
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.exceptions import DuplicatedError
 from app.models import User
@@ -10,7 +10,7 @@ from app.repository.base_repository import BaseRepository
 
 
 class UserRepository(BaseRepository):
-    def __init__(self, session_factory: Callable[..., AbstractAsyncContextManager[Session]]):
+    def __init__(self, session_factory: Callable[..., AbstractAsyncContextManager[AsyncSession]]):
         self.session_factory = session_factory
         super().__init__(session_factory, User)
 

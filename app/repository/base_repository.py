@@ -10,7 +10,6 @@ from sqlalchemy import update
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
-from sqlalchemy.orm import Session
 
 from app.core.exceptions import BadRequestError
 from app.core.exceptions import DuplicatedError
@@ -23,7 +22,7 @@ settings = Settings()
 
 
 class BaseRepository:
-    def __init__(self, session_factory: Callable[..., AbstractAsyncContextManager[Session]], model) -> None:
+    def __init__(self, session_factory: Callable[..., AbstractAsyncContextManager[AsyncSession]], model) -> None:
         self.session_factory = session_factory
         self.model = model
 
