@@ -43,20 +43,20 @@ async def create_user(user: BaseUserWithPassword, service: UserServiceDependency
 async def update_user(
     user_id: UUID, user: UpsertUser, service: UserServiceDependency, current_user: CurrentUserDependency
 ):
-    return await service.patch(id=user_id, schema=user, current_user=current_user)
+    return await service.patch(id=user_id, schema=user)
 
 
 @router.patch("/enable_user/{user_id}", response_model=Message)
 @authorize(role=[UserRoles.MODERATOR, UserRoles.ADMIN], allow_same_id=True)
 async def enabled_user(user_id: UUID, service: UserServiceDependency, current_user: CurrentUserDependency):
-    await service.patch_attr(id=user_id, attr="is_active", value=True, current_user=current_user)
+    await service.patch_attr(id=user_id, attr="is_active", value=True)
     return Message(detail="User has been enabled successfully")
 
 
 @router.delete("/disable/{user_id}", response_model=Message)
 @authorize(role=[UserRoles.MODERATOR, UserRoles.ADMIN], allow_same_id=True)
 async def disable_user(user_id: UUID, service: UserServiceDependency, current_user: CurrentUserDependency):
-    await service.patch_attr(id=user_id, attr="is_active", value=False, current_user=current_user)
+    await service.patch_attr(id=user_id, attr="is_active", value=False)
     return Message(detail="User has been desabled successfully")
 
 

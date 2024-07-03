@@ -7,7 +7,7 @@ from app.core.security import get_password_hash
 from app.core.security import verify_password
 from app.core.settings import settings
 from app.models import User
-from app.repository.user_repository import UserRepository
+from app.repository import UserRepository
 from app.schemas.auth_schema import Payload
 from app.schemas.auth_schema import SignIn
 from app.schemas.auth_schema import SignInResponse
