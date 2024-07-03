@@ -1,9 +1,13 @@
+from random import randint
+from random import uniform
 from typing import Any
 from typing import Dict
 
 import factory
 from factory.base import StubObject
 
+from app.models import Inventory
+from app.models import Product
 from app.models import User
 from app.models.models_enums import UserRoles
 
@@ -31,6 +35,23 @@ class UserFactory(factory.Factory):
     password = factory.LazyAttribute(lambda obj: f"{obj.username}_password")
     role = UserRoles.BASE_USER
     is_active = None
+
+
+class ProductFactory(factory.Factory):
+    class Meta:
+        model = Product
+
+    name = factory.Sequence(lambda x: f"product_{x}")
+    description = factory.LazyAttribute(lambda x: f"{x.name}_description")
+
+
+class InventoryFactory(factory.Factory):
+    class Meta:
+        model = Inventory
+
+    product_id = None
+    quantity = randint(1, 100000)
+    unit_price = uniform(1, 100000)
 
 
 def create_factory_users(users_qty: int = 1, user_role: UserRoles = UserRoles.BASE_USER, is_active=True):
