@@ -1,5 +1,4 @@
 from typing import List
-from typing import Optional
 from uuid import UUID
 
 from sqlalchemy import ForeignKey
@@ -19,12 +18,8 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(length=50), unique=True, index=True)
     username: Mapped[str] = mapped_column(String(length=50), unique=True)
 
-    sales: Mapped[Optional[List["Sale"]]] = relationship(
-        back_populates="seller", cascade="all, delete-orphan", init=False
-    )
-    purchases: Mapped[Optional[List["Purchase"]]] = relationship(
-        back_populates="buyer", cascade="all, delete-orphan", init=False
-    )
+    sales: Mapped[List["Sale"]] = relationship(back_populates="seller", cascade="all, delete-orphan", init=False)
+    purchases: Mapped[List["Purchase"]] = relationship(back_populates="buyer", cascade="all, delete-orphan", init=False)
     role: Mapped[UserRoles] = mapped_column(default=UserRoles.BASE_USER, server_default=UserRoles.BASE_USER)
     is_active: Mapped[bool] = mapped_column(default=True)
 
@@ -32,12 +27,12 @@ class User(Base):
 class Product(Base):
     __tablename__ = "products"
 
-    name: Mapped[str] = mapped_column(String(length=50), unique=True, index=True)
-    description: Mapped[str] = mapped_column(String(length=50))
+    name: Mapped[str] = mapped_column(String(length=100), unique=True, index=True)
+    description: Mapped[str] = mapped_column(String(length=240))
 
-    inventory: Mapped[List["Inventory"]] = relationship(back_populates="product")
-    sales_items: Mapped[List["SaleItem"]] = relationship(back_populates="product")
-    purchases: Mapped[List["Purchase"]] = relationship(back_populates="product")
+    inventory: Mapped[List["Inventory"]] = relationship(back_populates="product", init=False)
+    sales_items: Mapped[List["SaleItem"]] = relationship(back_populates="product", init=False)
+    purchases: Mapped[List["Purchase"]] = relationship(back_populates="product", init=False)
 
 
 class Sale(Base):
@@ -77,7 +72,7 @@ class Purchase(Base):
 class Inventory(Base):
     __tablename__ = "inventory"
 
-    product: Mapped[Product] = relationship(back_populates="inventory")
     product_id: Mapped[UUID] = mapped_column(ForeignKey("products.id"), unique=True, index=True)
     quantity: Mapped[int]
     unit_price: Mapped[float]
+    product: Mapped[Product] = relationship(back_populates="inventory", init=False)
