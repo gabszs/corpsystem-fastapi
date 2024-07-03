@@ -29,10 +29,9 @@ class Settings(BaseSettings):
     PAGE_SIZE: int = 20
     ORDERING: str = "-created_at"
 
-    base_skill_url: Optional[str] = "/v1/skill"
     base_users_url: Optional[str] = "/v1/user"
     base_auth_route: Optional[str] = "/v1/auth"
-    base_user_skills_route: Optional[str] = "/v1/user-skill"
+    base_product_route: Optional[str] = "/v1/product"
 
 
 settings = Settings()
