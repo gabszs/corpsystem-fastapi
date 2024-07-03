@@ -6,3 +6,5 @@ class UserRoles(str, Enum):
     MODERATOR = "MODERATOR"
     BASE_USER = "BASE_USER"
     GUEST = "GUEST"
+    SELLER = "SELLER"
+    BUYER = "BUYER"
