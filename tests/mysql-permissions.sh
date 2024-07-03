@@ -19,4 +19,3 @@ echo "Granted SELECT privilege to user '$TARGET_USER' on table '$TABLE_NAME' in 
 # GRANT ALL PRIVILEGES ON test.* TO 'app_user'@'%';
 # FLUSH PRIVILEGES;
 # EOF
-
