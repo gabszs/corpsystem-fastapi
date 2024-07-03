@@ -7,7 +7,7 @@ from app.core.settings import settings
 from app.routes.v1 import routers
 
 
-def init_app(init_db=True):
+def init_app(init_db: bool = True) -> FastAPI:
     lifespan = None
 
     if init_db:
