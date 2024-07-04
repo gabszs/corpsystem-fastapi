@@ -11,22 +11,22 @@ jobs:
       SECRET_KEY: ${{secrets.SECRET_KEY}}
       ALGORITHM: ${{secrets.ALGORITHM}}
       ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
-      POSTGRES_USER: ${{secrets.POSTGRES_USER}}
-      POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
-      POSTGRES_DB: ${{secrets.POSTGRES_DB}}
+      DB_USER: ${{secrets.DB_USER}}
+      DB_PASSWORD: ${{secrets.DB_PASSWORD}}
+      DB_DB: ${{secrets.DB_DB}}
       PAGE: ${{secrets.PAGE}}
       PAGE_SIZE: ${{secrets.PAGE_SIZE}}
       ORDERING: ${{secrets.ORDERING}}
 
     services:
-      postgres:
-        image: postgres
+      mysql:
+        image: mysql
         env:
-          POSTGRES_DB: ${{secrets.POSTGRES_DB}}
-          POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
-          POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+          MYSQL_DATABASE: ${{secrets.DB_DB}}
+          MYSQL_PASSWORD: ${{secrets.DB_PASSWORD}}
+          MYSQL_USER: ${{secrets.DB_USER}}
         ports:
-          - 5432:5432
+          - 3307:3306
 
     steps:
       - name: Cloning the Repository
