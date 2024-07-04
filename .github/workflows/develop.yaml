@@ -47,7 +47,6 @@ jobs:
 
       - name: Grant MySql Permissions
         run: mysql -h 127.0.0.1 --port 3307 -u root -p${{secrets.DB_PASSWORD}} -e "GRANT ALL PRIVILEGES ON test.* TO 'app_user'@'%';FLUSH PRIVILEGES;"
-        # run: mysql -u root -p
 
       - name: Run tests
         run: poetry run task test
