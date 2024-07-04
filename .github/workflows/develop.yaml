@@ -43,8 +43,14 @@ jobs:
       - name: Install Dependencies
         run: poetry install
 
+      - name: DEBBUG
+        run: ls -a
+
+      - name: Set permissions for mysql-permissions.sh (optional)
+        run: chmod +x tests/mysql-permissions.sh
+
       - name: Grant Permission in Test Db Container
-        run: ./tests/mysql-permissions.sh
+        run: tests/mysql-permissions.sh
 
       - name: Run tests
         run: poetry run task test
