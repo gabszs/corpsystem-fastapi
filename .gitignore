@@ -120,7 +120,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+# .env
 .venv
 env/
 venv/
@@ -163,3 +163,7 @@ cython_debug/
 test.py
 .test.py
 tests/new_conftest.py
+tesTT.py
+docs/2100301-10_06_2024.pdf
+tests/test_fixtures.py
+tests/test_fixtures.py
