@@ -13,7 +13,7 @@ jobs:
       ACCESS_TOKEN_EXPIRE_MINUTES: ${{secrets.ACCESS_TOKEN_EXPIRE_MINUTES}}
       DB_USER: ${{secrets.DB_USER}}
       DB_PASSWORD: ${{secrets.DB_PASSWORD}}
-      DB_DB: ${{secrets.DB_DB}}
+      DB: ${{secrets.DB}}
       PAGE: ${{secrets.PAGE}}
       PAGE_SIZE: ${{secrets.PAGE_SIZE}}
       ORDERING: ${{secrets.ORDERING}}
@@ -26,7 +26,7 @@ jobs:
           MYSQL_PASSWORD: ${{secrets.DB_PASSWORD}}
           MYSQL_USER: ${{secrets.DB_USER}}
         ports:
-          - 3307:3306
+          - 3306:3306
 
     steps:
       - name: Cloning the Repository
