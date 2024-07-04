@@ -33,6 +33,8 @@ async def test_get_token_should_return_200_OK_POST(client, session, normal_user)
 @pytest.mark.anyio
 async def test_auth_token_expired_after_time_should_return_403_FORBIDDEN_POST(client, session, normal_user):
     overtime_minutes = settings.ACCESS_TOKEN_EXPIRE_MINUTES + 1
+    overtime_hours, overtime_minutes = divmod(overtime_minutes, 60)
+    overtime_time = f"2023-12-28 {12 + overtime_hours:02}:{overtime_minutes:02}:00"
 
     with freeze_time("2023-12-28 12:00:00"):
         response = await client.post(
@@ -44,7 +46,7 @@ async def test_auth_token_expired_after_time_should_return_403_FORBIDDEN_POST(cl
         token = response.json()["access_token"]
         token_header = {"Authorization": f"Bearer {token}"}
 
-    with freeze_time(f"2023-12-28 12:{overtime_minutes}:00"):
+    with freeze_time(overtime_time):
         response = await client.get(f"{settings.base_auth_route}/me", headers=token_header)
 
         assert response.status_code == 403
@@ -98,6 +100,8 @@ async def test_auth_get_me_should_return_200_OK_GET(client, session, normal_user
 @pytest.mark.anyio
 async def test_auth_token_expired_after_dont_refresh_should_return_403_FORBIDDEN_POST(client, session, normal_user):
     overtime_minutes = settings.ACCESS_TOKEN_EXPIRE_MINUTES + 1
+    overtime_hours, overtime_minutes = divmod(overtime_minutes, 60)
+    overtime_time = f"2023-12-28 {12 + overtime_hours:02}:{overtime_minutes:02}:00"
 
     with freeze_time("2023-12-28 12:00:00"):
         response = await client.post(
@@ -108,7 +112,7 @@ async def test_auth_token_expired_after_dont_refresh_should_return_403_FORBIDDEN
         token = response.json()["access_token"]
         token_header = {"Authorization": f"Bearer {token}"}
 
-    with freeze_time(f"2023-12-28 12:{overtime_minutes}:00"):
+    with freeze_time(overtime_time):
         response = await client.post(f"{settings.base_auth_route}/refresh_token", headers=token_header)
 
         assert response.status_code == 403
@@ -118,6 +122,8 @@ async def test_auth_token_expired_after_dont_refresh_should_return_403_FORBIDDEN
 @pytest.mark.anyio
 async def test_refresh_token_should_return_200_OK_POST(client, session, normal_user):
     overtime_minutes = settings.ACCESS_TOKEN_EXPIRE_MINUTES - 1
+    overtime_hours, overtime_minutes = divmod(overtime_minutes, 60)
+    overtime_time = f"2023-12-28 {12 + overtime_hours:02}:{overtime_minutes:02}:00"
 
     with freeze_time("2023-12-28 12:00:00"):
         response = await client.post(
@@ -128,7 +134,7 @@ async def test_refresh_token_should_return_200_OK_POST(client, session, normal_u
         token = response.json()["access_token"]
         token_header = {"Authorization": f"Bearer {token}"}
 
-    with freeze_time(f"2023-12-28 12:{overtime_minutes}:00"):
+    with freeze_time(overtime_time):
         response = await client.post(f"{settings.base_auth_route}/refresh_token", headers=token_header)
 
         response_json = response.json()
