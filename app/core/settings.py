@@ -32,6 +32,7 @@ class Settings(BaseSettings):
     base_users_url: Optional[str] = "/v1/user"
     base_auth_route: Optional[str] = "/v1/auth"
     base_product_route: Optional[str] = "/v1/product"
+    base_inventory_route: Optional[str] = "/v1/inventory"
 
 
 settings = Settings()
