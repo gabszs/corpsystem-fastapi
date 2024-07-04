@@ -22,9 +22,10 @@ jobs:
       mysql:
         image: mysql
         env:
-          MYSQL_DATABASE: ${{secrets.DB_DB}}
+          MYSQL_DATABASE: ${{secrets.DB}}
           MYSQL_PASSWORD: ${{secrets.DB_PASSWORD}}
           MYSQL_USER: ${{secrets.DB_USER}}
+          MYSQL_ROOT_PASSWORD: ${{secrets.DB_PASSWORD}}
         ports:
           - 3306:3306
 
