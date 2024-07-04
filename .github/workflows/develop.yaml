@@ -61,7 +61,10 @@ jobs:
 
       - name: Grant MySql Permissions
         run: |
-          mysql -h 127.0.0.1 --port 3307 -u root -p${{secrets.DB_PASSWORD}} -e "CREATE DATABASE IF NOT EXISTS test;"
+          CREATE USER 'root'@'%' IDENTIFIED BY '${{secrets.DB_PASSWORD}}';
+          GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;
+          GRANT ALL PRIVILEGES ON test.* TO 'app_user'@'%';
+          FLUSH PRIVILEGES;
 
       - name: Run tests
         run: poetry run task test
