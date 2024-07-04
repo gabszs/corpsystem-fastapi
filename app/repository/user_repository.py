@@ -26,7 +26,5 @@ class UserRepository(BaseRepository):
                     raise DuplicatedError(detail="Email already registered")
                 if "username" in str(e.orig):
                     raise DuplicatedError(detail="Username already registered")
-                print(e.orig)
-                print("caindo no ultimo try")
                 raise DuplicatedError(detail=f"{self.model.__tablename__.capitalize()[:-1]} already registered")
             return model
