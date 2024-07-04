@@ -44,7 +44,7 @@ jobs:
         run: poetry install
 
       - name: DEBBUG
-        run: ls -a
+        run: docker ps
 
       - name: Set permissions for mysql-permissions.sh (optional)
         run: chmod +x tests/mysql-permissions.sh
