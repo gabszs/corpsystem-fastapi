@@ -46,7 +46,7 @@ jobs:
         run: poetry install
 
       - name: Grant MySql Permissions
-        run: mysql -h 127.0.0.1 --port 3307 -u root -p${{secrets.DB_PASSWORD}} -e "GRANT ALL PRIVILEGES ON test.* TO 'app_user'@'localhost'; FLUSH PRIVILEGES;"
+        run: mysql -h 127.0.0.1 --port 3307 -u root -p${{secrets.DB_PASSWORD}} -e "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost'; GRANT ALL PRIVILEGES ON test.* TO 'app_user'@'localhost'; FLUSH PRIVILEGES;"
 
       - name: Run tests
         run: poetry run task test
