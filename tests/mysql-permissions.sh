@@ -1,5 +1,6 @@
 #!/bin/bash
-
+echo "APPLYING PRIVILAGES"
+docker exec -it mysql /bin/bash
 MYSQL_ROOT_PASSWORD="app_password"  # Assuming you used this password in docker run
 
 mysql -u root -p$MYSQL_ROOT_PASSWORD
