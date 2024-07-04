@@ -16,9 +16,9 @@ class Settings(BaseSettings):
     ALGORITHM: str
     ACCESS_TOKEN_EXPIRE_MINUTES: int
 
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
+    DB_USER: str
+    DB_PASSWORD: str
+    DB_DB: str
 
     DATETIME_FORMAT: str = "%Y-%m-%dT%H:%M:%S"
     TEST_DATABASE_URL: str
