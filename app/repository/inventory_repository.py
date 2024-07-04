@@ -27,7 +27,7 @@ class InventoryRepository(BaseRepository):
             except IntegrityError as _:
                 model_name = "Inventory"
                 if "Cannot add or update a child row" in str(_):
-                    raise ValidationError("Wrong FK ID, please use correct model id")
+                    raise ValidationError("Wrong FK ID, please use correct model FK")
                 raise DuplicatedError(detail=f"{model_name} already registered")
             except Exception as error:
                 raise BadRequestError(str(error))

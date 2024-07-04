@@ -10,6 +10,25 @@ from tests.helpers import validate_datetime
 
 # POST - CREATE
 @pytest.mark.anyio
+async def test_create_normal_inventory_should_return_422_WRONG_MODEL_PK_POST(
+    client, session, factory_inventory, product, normal_user, admin_user_token
+):
+    response = await client.post(
+        f"{settings.base_inventory_route}/",
+        json={
+            "product_id": str(normal_user.id),
+            "quantity": factory_inventory.quantity,
+            "unit_price": factory_inventory.unit_price,
+        },
+        headers=admin_user_token,
+    )
+    response_json = response.json()
+
+    assert response.status_code == 422
+    assert response_json == {"detail": "Wrong FK ID, please use correct model FK"}
+
+
+@pytest.mark.anyio
 async def test_create_normal_inventory_should_return_201_POST(
     client, session, factory_inventory, product, normal_user, admin_user_token
 ):
