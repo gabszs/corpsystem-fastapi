@@ -1,5 +1,4 @@
 from random import randint
-from random import uniform
 from typing import Any
 from typing import Dict
 
@@ -51,7 +50,7 @@ class InventoryFactory(factory.Factory):
 
     product_id = None
     quantity = randint(1, 100000)
-    unit_price = uniform(1, 100000)
+    unit_price = randint(1, 100000)
 
 
 def create_factory_users(users_qty: int = 1, user_role: UserRoles = UserRoles.BASE_USER, is_active=True):

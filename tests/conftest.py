@@ -26,6 +26,7 @@ from app.models import Base
 from app.models import User
 from app.models.models_enums import UserRoles
 from app.schemas.product_schema import PublicProduct
+from tests.factories import InventoryFactory
 from tests.factories import ProductFactory
 from tests.factories import UserFactory
 from tests.helpers import add_users_models
@@ -75,6 +76,11 @@ def factory_user() -> UserFactory:
 @pytest.fixture
 def factory_product() -> ProductFactory:
     return ProductFactory()
+
+
+@pytest.fixture
+def factory_inventory() -> InventoryFactory:
+    return InventoryFactory()
 
 
 @pytest.fixture
