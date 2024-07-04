@@ -43,9 +43,5 @@ jobs:
       - name: Install Dependencies
         run: poetry install
 
-
-      - name: Grant Permission in Test Db Container
-        run: tests/mysql-permissions.sh
-
       - name: Run tests
         run: poetry run task test
