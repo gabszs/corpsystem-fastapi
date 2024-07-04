@@ -25,8 +25,8 @@ class Settings(BaseSettings):
     # TEST_DATABASE_URL: str = "postgresql+asyncpg://app_user:app_password@localhost:5433/app_db"
     OPENAI_API_KEY: str
 
-    PAGE: int = 1
-    PAGE_SIZE: int = 20
+    PAGE: Optional[int] = 1
+    PAGE_SIZE: Optional[int] = 20
     ORDERING: str = "-created_at"
 
     base_users_url: Optional[str] = "/v1/user"

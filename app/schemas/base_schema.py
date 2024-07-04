@@ -45,7 +45,7 @@ class ModelBaseInfo(BaseModel):
 
 class FindBase(BaseModel):
     ordering: Optional[str] = settings.ORDERING
-    page: Annotated[int, Field(gt=0)] = settings.PAGE
+    page: Annotated[int, Field(gt=0)] = settings.PAGE  # type: ignore
     page_size: Optional[Union[int, str]] = settings.PAGE_SIZE
 
     @field_validator("page_size")
