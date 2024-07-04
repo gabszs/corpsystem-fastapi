@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     DB_USER: str
     DB_PASSWORD: str
-    DB_DB: str
+    DB: str
 
     DATETIME_FORMAT: str = "%Y-%m-%dT%H:%M:%S"
     TEST_DATABASE_URL: str
