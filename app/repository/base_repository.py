@@ -97,7 +97,7 @@ class BaseRepository:
 
             except IntegrityError as _:
                 if "Cannot add or update a child row" in str(_):
-                    raise ValidationError("Wrong FK ID, please use correct model id")
+                    raise ValidationError("Wrong FK ID, please use correct model FK")
                 raise DuplicatedError(detail=f"{self.model.__tablename__.capitalize()[:-1]} already registered")
             except Exception as error:
                 raise BadRequestError(str(error))

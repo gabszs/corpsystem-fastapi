@@ -11,6 +11,7 @@ from tests.helpers import get_user_by_index
 from tests.helpers import get_user_token
 from tests.helpers import setup_users_data
 from tests.helpers import validate_datetime
+from tests.helpers import validate_users_output_models
 from tests.schemas import UserSchemaWithHashedPassword
 
 
@@ -40,18 +41,12 @@ async def test_get_all_users_should_return_200_OK_GET(
         f"{settings.base_users_url}/?{urlencode(default_username_search_options)}", headers=moderator_user_token
     )
     response_json = response.json()
-
     users_json = response_json["founds"]
+
     assert response.status_code == 200
     assert len(users_json) == expected_lenght
     assert response_json["search_options"] == default_username_search_options | {"total_count": expected_lenght}
-    assert all(
-        [
-            user.username == users_json[count].get("username") and user.email == users_json[count].get("email")
-            for count, user in enumerate(setup_users)
-        ]
-    )
-
+    validate_users_output_models(setup_users, response_json["founds"], ["username", "email"])
     assert all([validate_datetime(user["created_at"]) for user in users_json])
     assert all([validate_datetime(user["updated_at"]) for user in users_json])
 
@@ -71,13 +66,7 @@ async def test_get_all_users_with_page_size_should_return_200_OK_GET(
     response_json = response.json()
 
     assert response.status_code == 200
-    assert all(
-        [
-            user.username == response_json["founds"][count].get("username")
-            and user.email == response_json["founds"][count].get("email")
-            for count, user in enumerate(setup_users[: query_find_parameters["page_size"]])
-        ]
-    )
+    validate_users_output_models(setup_users, response_json["founds"], ["username", "email"])
     assert len(response_json["founds"]) == 5
     assert response_json["search_options"] == query_find_parameters | {"total_count": 5}
     assert all([validate_datetime(user["created_at"]) for user in response_json["founds"]])
@@ -102,13 +91,7 @@ async def test_get_all_users_with_pagination_should_return_200_OK_GET(
     response_json = response.json()
 
     assert response.status_code == 200
-    assert all(
-        [
-            user.username == response_json["founds"][count].get("username")
-            and user.email == response_json["founds"][count].get("email")
-            for count, user in enumerate(setup_users[page_size : page_size * page])
-        ]
-    )
+    validate_users_output_models(setup_users, response_json["founds"], ["username", "email"])
     assert len(response_json["founds"]) == query_find_parameters["page_size"]
     assert response_json["search_options"] == query_find_parameters | {
         "total_count": query_find_parameters["page_size"]

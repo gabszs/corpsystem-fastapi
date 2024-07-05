@@ -65,8 +65,8 @@ class Purchase(Base):
     unit_price: Mapped[float]
     total_price: Mapped[float]
 
-    buyer: Mapped[User] = relationship(back_populates="purchases")
-    product: Mapped[Product] = relationship(back_populates="purchases")
+    buyer: Mapped[User] = relationship(back_populates="purchases", init=False)
+    product: Mapped[Product] = relationship(back_populates="purchases", init=False)
 
 
 class Inventory(Base):
