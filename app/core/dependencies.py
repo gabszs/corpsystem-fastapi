@@ -15,12 +15,14 @@ from app.core.settings import settings
 from app.models import User
 from app.repository import InventoryRepository
 from app.repository import ProductRepository
+from app.repository import PurchaseRepository
 from app.repository import UserRepository
 from app.schemas.auth_schema import Payload
 from app.schemas.base_schema import FindBase
 from app.services import AuthService
 from app.services import InventoryService
 from app.services import ProductService
+from app.services import PurchaseService
 from app.services import UserService
 
 
@@ -62,6 +64,11 @@ async def get_inventory_service(session: AsyncSession = Depends(get_session_fact
     return InventoryService(inventory_repository)
 
 
+async def get_purchase_service(session: AsyncSession = Depends(get_session_factory)):
+    purchase_repository = PurchaseRepository(session_factory=session)
+    return PurchaseService(purchase_repository)
+
+
 FindQueryParameters = Annotated[FindBase, Depends()]
 SessionDependency = Annotated[Session, Depends(get_db)]
 UserServiceDependency = Annotated[UserService, Depends(get_user_service)]
@@ -70,3 +77,4 @@ AuthServiceDependency = Annotated[AuthService, Depends(get_auth_service)]
 CurrentActiveUserDependency = Annotated[User, Depends(get_current_active_user)]
 ProductServiceDependency = Annotated[ProductService, Depends(get_product_service)]
 InventoryServiceDependency = Annotated[InventoryService, Depends(get_inventory_service)]
+PurchaseServiceDependency = Annotated[PurchaseService, Depends(get_purchase_service)]
