@@ -7,6 +7,7 @@ from factory.base import StubObject
 
 from app.models import Inventory
 from app.models import Product
+from app.models import Purchase
 from app.models import User
 from app.models.models_enums import UserRoles
 
@@ -48,9 +49,20 @@ class InventoryFactory(factory.Factory):
     class Meta:
         model = Inventory
 
-    product_id = None
-    quantity = randint(1, 100000)
-    unit_price = randint(1, 100000)
+    product_id = factory.LazyAttribute(lambda o: None)
+    quantity = factory.LazyAttribute(lambda o: randint(1, 10000))
+    unit_price = factory.LazyAttribute(lambda o: randint(1, 10000))
+
+
+class PurchaseFactory(factory.Factory):
+    class Meta:
+        model = Purchase
+
+    buyer_id = factory.LazyAttribute(lambda o: None)
+    product_id = factory.LazyAttribute(lambda o: None)
+    quantity = factory.LazyAttribute(lambda o: randint(1, 100))
+    unit_price = factory.LazyAttribute(lambda o: randint(1, 100))
+    total_price = factory.LazyAttribute(lambda o: o.quantity * o.unit_price)
 
 
 def create_factory_users(users_qty: int = 1, user_role: UserRoles = UserRoles.BASE_USER, is_active=True):

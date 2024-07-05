@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 from typing import Dict
 from typing import List
 from typing import Optional
@@ -13,9 +14,11 @@ from app.models import User
 from app.models.models_enums import UserRoles
 from app.schemas.inventory_schema import PublicInventory
 from app.schemas.product_schema import PublicProduct
+from app.schemas.purchase_schema import PublicPurchase
 from tests.factories import create_factory_users
 from tests.factories import InventoryFactory
 from tests.factories import ProductFactory
+from tests.factories import PurchaseFactory
 from tests.schemas import UserModelSetup
 from tests.schemas import UserSchemaWithHashedPassword
 
@@ -136,6 +139,44 @@ async def setup_inventory_data(
     return inventory_list
 
 
+async def setup_purchase_data(
+    session: AsyncSession, purchase_qty: int = 1, index: Optional[int] = None, multiple_assoc_models: bool = False
+) -> Union[List[PublicPurchase], PublicPurchase]:
+    purchases_list: List[PublicPurchase] = []
+    purchases = []
+
+    if multiple_assoc_models:
+        products = await setup_product_data(session, purchase_qty)
+        buyers = await add_users_models(session, users_qty=purchase_qty, user_role=UserRoles.BUYER)
+        for buyer, product in zip(buyers, products):
+            purchases.append(PurchaseFactory(product_id=product.id, buyer_id=buyer.id))
+    else:
+        product = (await setup_product_data(session, 1))[0]
+        buyer = (await add_users_models(session, 1, user_role=UserRoles.BUYER))[0]
+        purchases.extend(PurchaseFactory.create_batch(size=purchase_qty, product_id=product.id, buyer_id=buyer.id))
+
+    session.add_all(purchases)
+    await session.commit()
+    for product in purchases:
+        await session.refresh(product)
+        purchases_list.append(
+            PublicPurchase(
+                quantity=product.quantity,
+                unit_price=product.unit_price,
+                product_id=product.product_id,
+                buyer_id=product.buyer_id,
+                total_price=product.total_price,
+                id=product.id,
+                created_at=product.created_at,
+                updated_at=product.updated_at,
+            )
+        )
+
+    if index is not None:
+        return purchases_list[index]
+    return purchases_list
+
+
 async def token(client, session: AsyncSession, base_auth_route: str = "/v1/auth", **kwargs):
     user = await add_users_models(session=session, index=0, **kwargs)
     response = await client.post(
@@ -155,3 +196,23 @@ async def get_user_token(client: AsyncClient, user: UserSchemaWithHashedPassword
 async def get_user_by_index(client, index: int = 0, token_header: Optional[str] = None):
     response = await client.get(f"{settings.base_users_url}/?ordering=username", headers=token_header)
     return response.json()["founds"][index]
+
+
+def validate_users_output_models(input_models: List[Any], output_models: List[Any], attrs_to_check: List[str]):
+    for input_model in input_models:
+        for output_model in output_models:
+            if input_model.id == output_model["id"]:
+                for attr in attrs_to_check:
+                    if attr == "id":
+                        assert str(input_model.getattr(attr)) == output_model["attr"]
+                    assert input_model.getattr(attr) == output_model["attr"]
+
+
+# def validate_users_output_models(input_models: List[str], output_models: List[str], attrs_to_check: List[str]):
+#     for input_model in input_models:
+#         for output_model in output_models:
+#             if input_model.id == output_model["id"]:
+#                 for attr in attrs_to_check:
+#                     if attr == "id":
+#                         assert str(input_model.getattr(attr)) == output_model["attr"]
+#                     assert input_model.getattr(attr) == output_model["attr"]
